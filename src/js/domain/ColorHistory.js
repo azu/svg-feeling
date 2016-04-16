@@ -9,6 +9,9 @@ export default class ColorHistory {
         this._history = initialColor ? [initialColor] : [];
     }
 
+    getAllColorList(){
+        return this._history;
+    }
     /**
      * @param {Color} color
      * @returns {boolean}

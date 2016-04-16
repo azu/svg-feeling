@@ -2,8 +2,8 @@
 "use strict";
 const React = require("react");
 import AppContextLocator from "../../AppContextLocator";
-import SVGIcon from "../uikit/SVGIcon/SVGIcon";
 import PlaygroundContainer from "./PlaygroundContainer/PlaygroundContainer";
+import HistoryContainer from "./HistoryContainer/HistoryContainer";
 // Container
 export default class App extends React.Component {
     constructor(...args) {
@@ -23,9 +23,10 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {currentColor} = this.state;
+        const {currentColor, colorHistory} = this.state;
         return <div>
             <PlaygroundContainer color={currentColor}/>
+            <HistoryContainer colorHistory={colorHistory} />
         </div>;
     }
 }
