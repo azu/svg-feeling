@@ -1,0 +1,10 @@
+/* Define Page Item width */
+:root {
+    --PageContainer-width: 960px;
+}
+
+.App {
+    width: var(--PageContainer-width);
+    height: 100%;
+    margin: 0 auto;
+}
