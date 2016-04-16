@@ -32,10 +32,11 @@ export default class Store extends CoreEventEmitter {
     }
 
     /**
-     * return state object
-     * @return {Object}
+     * implement return state object
+     * @param {Object} prevState
+     * @return {Object} nextState
      */
-    getState() {
+    getState(prevState) {
         throw new Error("should be implemented Store#getState(): Object");
     }
 

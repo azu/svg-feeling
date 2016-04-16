@@ -2,7 +2,6 @@
 :root {
     --PageContainer-width: 960px;
 }
-
 .App {
     width: var(--PageContainer-width);
     height: 100%;

@@ -50,13 +50,34 @@ export default class StoreGroup extends CoreEventEmitter {
         this.stores = stores;
         // listen onChange of each store.
         this.stores.forEach(store => this.registerStore(store));
+
+        /**
+         * @type {WeakMap}
+         * @private
+         */
+        this._storeValueMap = new WeakMap();
     }
 
     getState() {
         return Object.assign({}, ...this.stores.map(store => {
-            const state = store.getState();
-            assert(typeof state == "object", `${store.name}.getState() should return Object`);
-            return state;
+            /* Why record nextState to `_storeValueMap`.
+            It is for Use Store's getState(prevState) implementation.
+            
+            @example
+            
+            class ExampleStore extends Store {
+                getState(prevState = initialState) {
+                    return {
+                        nextState
+                    };
+                }
+            }
+             */
+            const prevState = this._storeValueMap.get(store);
+            const nextState = store.getState(prevState);
+            this._storeValueMap.set(store, nextState);
+            assert(typeof nextState == "object", `${store.name}.getState() should return Object`);
+            return nextState;
         }));
     }
 

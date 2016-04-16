@@ -1,8 +1,8 @@
 // LICENSE : MIT
 "use strict";
-import Store from "../framework/Store";
+import ReduceStore from "./store-pattern/ReduceStore";
 import Color from "../domain/value/Color";
-export default class ColorStore extends Store {
+export default class ColorStore extends ReduceStore {
     /**
      * @param {ColorMixerRepository} colorMixerRepository
      */
@@ -11,16 +11,24 @@ export default class ColorStore extends Store {
         this.state = {
             currentColor: new Color({hexCode: "#fff"})
         };
+        // from useCase
+        // `this.onDispatch("ChangeColorUseCase", this.updateState);`
+        // from Repository
         colorMixerRepository.onChange(() => {
-            const colorMixer = colorMixerRepository.lastUsed();
-            this.state = Object.assign({}, {
-                currentColor: colorMixer.currentColor()
-            });
-            this.emitChange();
+            const color = colorMixerRepository.lastUsed().currentColor();
+            this.updateState({
+                type: "colorMixerRepository",
+                color
+            })
         });
     }
 
-    getState() {
-        return this.state;
+    reduce(prevState, payload) {
+        switch (payload.type) {
+            case "colorMixerRepository":
+                return {currentColor: payload.color};
+            default:
+                return prevState;
+        }
     }
 }

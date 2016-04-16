@@ -2,25 +2,27 @@
 "use strict";
 import Store from "../framework/Store";
 import ColorHistory from "../domain/ColorHistory";
+const initialState = {
+    colorHistory: new ColorHistory()
+};
 export default class ColorHistoryStore extends Store {
     /**
      * @param {ColorMixerRepository} colorMixerRepository
      */
     constructor({colorMixerRepository}) {
         super();
-        this.state = {
-            colorHistory: new ColorHistory()
-        };
-        colorMixerRepository.onChange(() => {
-            const colorMixer = colorMixerRepository.lastUsed();
-            this.state = Object.assign({}, {
-                colorHistory: colorMixer.getHistory()
-            });
-            this.emitChange();
-        });
+        this.colorMixerRepository = colorMixerRepository;
+        this.colorMixerRepository.onChange(() => this.emitChange());
+        // State pattern
+        // this.onDispatch("ChangeColorUseCase", () => this.emitChange());
     }
 
-    getState() {
-        return this.state;
+
+    getState(prevState = initialState) {
+        const colorMixer = this.colorMixerRepository.lastUsed();
+        const colorHistory = colorMixer.getHistory();
+        return {
+            colorHistory
+        };
     }
 }

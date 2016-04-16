@@ -4,6 +4,7 @@ const React = require("react");
 import AppContextLocator from "../../AppContextLocator";
 import PlaygroundContainer from "./PlaygroundContainer/PlaygroundContainer";
 import HistoryContainer from "./HistoryContainer/HistoryContainer";
+import MousePositionContainer from "./MousePositionContainer/MousePositionContainer";
 // Container
 export default class App extends React.Component {
     constructor(...args) {
@@ -23,10 +24,14 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {currentColor, colorHistory} = this.state;
-        return <div>
+        const {currentColor, colorHistory, wallColor} = this.state;
+        const style = {
+            backgroundColor: wallColor.rgba
+        };
+        return <div className="App" style={style}>
+            <MousePositionContainer />
             <PlaygroundContainer color={currentColor}/>
-            <HistoryContainer colorHistory={colorHistory} />
+            <HistoryContainer colorHistory={colorHistory}/>
         </div>;
     }
 }
