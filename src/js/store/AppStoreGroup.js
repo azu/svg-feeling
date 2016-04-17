@@ -11,7 +11,10 @@ export default class AppStoreGroup {
      * @returns {StoreGroup}
      */
     constructor(dispatcher) {
-        return new StoreGroup(AppStoreGroup.create(), dispatcher);
+        return new StoreGroup({
+            stores: AppStoreGroup.create(),
+            dispatcher
+        });
     }
 
     /**
