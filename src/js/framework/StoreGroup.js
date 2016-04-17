@@ -44,7 +44,7 @@ export default class StoreGroup extends CoreEventEmitter {
          * @private
          */
         this._currentChangingStores = [];
-        this._previusChangingStores = [];
+        this._previousChangingStores = [];
         /**
          * @type {Store[]}
          */
@@ -67,16 +67,15 @@ export default class StoreGroup extends CoreEventEmitter {
              @example
 
              class ExampleStore extends Store {
-             getState(prevState = initialState) {
-             return {
-             nextState
-             };
-             }
+                 getState(prevState = initialState) {
+                     return {
+                        nextState
+                     };
+                 }
              }
              */
             const prevState = this._storeValueMap.get(store.name);
-            // TODO: Not change in the time, return prevState
-            if (prevState && this._previusChangingStores.indexOf(store) === -1) {
+            if (prevState && this._previousChangingStores.indexOf(store) === -1) {
                 return {
                     [store.name]: prevState
                 };
@@ -132,9 +131,9 @@ export default class StoreGroup extends CoreEventEmitter {
     }
 
     emitChange() {
-        this._previusChangingStores = this._currentChangingStores.slice();
+        this._previousChangingStores = this._currentChangingStores.slice();
         // transfer ownership of changingStores to other
-        this.emit(CHANGE_STORE_GROUP, this._previusChangingStores);
+        this.emit(CHANGE_STORE_GROUP, this._previousChangingStores);
         // release ownership  of changingStores from StoreGroup
         this._currentChangingStores.length = 0;
     }
