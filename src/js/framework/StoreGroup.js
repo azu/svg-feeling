@@ -44,6 +44,7 @@ export default class StoreGroup extends CoreEventEmitter {
          * @private
          */
         this._currentChangingStores = [];
+        this._previusChangingStores = [];
         /**
          * @type {Store[]}
          */
@@ -52,10 +53,10 @@ export default class StoreGroup extends CoreEventEmitter {
         this.stores.forEach(store => this.registerStore(store));
 
         /**
-         * @type {WeakMap}
+         * @type {Map}
          * @private
          */
-        this._storeValueMap = new WeakMap();
+        this._storeValueMap = new Map();
     }
 
     getState() {
@@ -73,15 +74,15 @@ export default class StoreGroup extends CoreEventEmitter {
              }
              }
              */
-            const prevState = this._storeValueMap.get(store);
+            const prevState = this._storeValueMap.get(store.name);
             // TODO: Not change in the time, return prevState
-            if (prevState && this._currentChangingStores.indexOf(store) === -1) {
+            if (prevState && this._previusChangingStores.indexOf(store) === -1) {
                 return {
                     [store.name]: prevState
                 };
             }
             const nextState = store.getState(prevState);
-            this._storeValueMap.set(store, nextState);
+            this._storeValueMap.set(store.name, nextState);
             assert(typeof nextState == "object", `${store.name}.getState() should return Object`);
             return {
                 [store.name]: nextState
@@ -131,9 +132,11 @@ export default class StoreGroup extends CoreEventEmitter {
     }
 
     emitChange() {
+        this._previusChangingStores = this._currentChangingStores.slice();
         // transfer ownership of changingStores to other
-        this.emit(CHANGE_STORE_GROUP, this._currentChangingStores.slice());
+        this.emit(CHANGE_STORE_GROUP, this._previusChangingStores);
         // release ownership  of changingStores from StoreGroup
+        this._currentChangingStores.length = 0;
     }
 
     onChange(handler) {
