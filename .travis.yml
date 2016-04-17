@@ -8,8 +8,8 @@ env:
 after_success:
   - |
 
-       $(npm bin)/set-up-ssh --key "$encrypted_0713a35a8e5d_key" \
-                             --iv "$encrypted_0713a35a8e5d_iv" \
+       $(npm bin)/set-up-ssh -k "$encrypted_0713a35a8e5d_key" \
+                             -iv "$encrypted_0713a35a8e5d_iv" \
                              --path-encrypted-key ".travis/github_deploy_key.enc"
 
        # Add the SSH-related commands here, see:
