@@ -2,8 +2,9 @@ sudo: false
 language: node_js
 node_js: "stable"
 env:
-  - GH_USER_EMAIL="azuciao@gmail.com"
-  - GH_USER_NAME="azu"
+  global:
+    - GH_USER_EMAIL="azuciao@gmail.com"
+    - GH_USER_NAME="azu"
 after_success:
   - |
 
