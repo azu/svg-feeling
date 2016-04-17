@@ -24,7 +24,10 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {currentColor, colorHistory, wallColor} = this.state;
+        const {ColorStore, ColorHistoryStore, WallColorStore} = this.state;
+        const {currentColor} = ColorStore;
+        const {colorHistory} = ColorHistoryStore;
+        const {wallColor} = WallColorStore;
         const style = {
             backgroundColor: wallColor.rgba
         };

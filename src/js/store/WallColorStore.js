@@ -4,7 +4,7 @@ import ReduceStore from "./store-pattern/ReduceStore";
 import {ChangeWallColorUseCase} from "../UseCase/ChangeWallColor";
 import RGBAColor from "../../js/domain/value/RGBAColor";
 
-export default class ColorStore extends ReduceStore {
+export default class WallColorStore extends ReduceStore {
     constructor() {
         super();
         this.state = {
