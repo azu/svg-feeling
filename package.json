@@ -16,7 +16,7 @@
     "url": "https://github.com/azu/svg-feeling/issues"
   },
   "version": "1.0.0",
-  "description": "viewing presentation and annotate.",
+  "description": "SVG feeling",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -30,11 +30,11 @@
     "watch:css": "chokidar --initial 'src/**/*.css' -c 'postcss --config postcss.config.js'",
     "watch": "npm-run-all clean --parallel watch:*",
     "prepublish": "npm run --if-present build",
-    "test": "mocha"
+    "test": "mocha",
+    "deploy": "gh-pages -d public"
   },
   "keywords": [
-    "presentation",
-    "pdf"
+    "svg"
   ],
   "devDependencies": {
     "autoprefixer": "^6.3.6",

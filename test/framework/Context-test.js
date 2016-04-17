@@ -63,16 +63,17 @@ describe("Context", function () {
         it("should get a single state from State", function () {
             const dispatcher = new Dispatcher();
             const expectedMergedObject = {
-                "1": 1,
-                "key": "value"
+                "1": 1
             };
-            const stores = [new TestStore({"1": 1}), new TestStore({"key": "value"})];
+            const stores = [new TestStore({"1": 1})];
             const appContext = new Context({
                 dispatcher,
                 stores: stores
             });
             const states = appContext.getState();
-            assert.deepEqual(states, expectedMergedObject);
+            assert.deepEqual(states, {
+                TestStore: expectedMergedObject
+            });
         });
     });
     describe("#onChange", function () {
