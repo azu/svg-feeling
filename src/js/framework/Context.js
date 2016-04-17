@@ -10,7 +10,7 @@ const CONTEXT_ON_CHANGE = "CONTEXT_ON_CHANGE";
 export default class Context extends CoreEventEmitter {
     /**
      * @param {Dispatcher} dispatcher
-     * @param {StoreGroup|Object} store
+     * @param {StoreGroup|Store} store
      */
     constructor({dispatcher, store}) {
         super();
@@ -18,14 +18,13 @@ export default class Context extends CoreEventEmitter {
         // central dispatcher
         this._dispatcher = dispatcher;
         this._storeGroup = store;
-        
-        // delegate dispatcher event 
-        this._dispatcher.pipe(this._storeGroup);
-        // Note: StoreGroup thin out change events of stores.
-        // When Multiple stores are change at same time, call change handler at once.
-        this._storeGroup.onChange(changingStores => {
-            this.emit(CONTEXT_ON_CHANGE, changingStores);
-        });
+
+        // delegate dispatcher event.
+        // It it for Store.
+        // Dispatcher -> Store
+        // StoreGroup already delete event to store*s* when it was initialized.
+        // Dispatcher -> | StoreGroup | -> Store*s*
+        this.releaseDispacherEvent = this._dispatcher.pipe(this._storeGroup);
     }
 
     /**
@@ -39,9 +38,10 @@ export default class Context extends CoreEventEmitter {
     /**
      * if anyone store is changed, then call onChangeHandler
      * @param {function(changingStores: Store[])} onChangeHandler
+     * @return {Function} release handler function.
      */
     onChange(onChangeHandler) {
-        this.on(CONTEXT_ON_CHANGE, onChangeHandler);
+        return this._storeGroup.onChange(onChangeHandler);
     }
 
     /**
@@ -63,6 +63,9 @@ export default class Context extends CoreEventEmitter {
     release() {
         if (typeof this._storeGroup === "function") {
             this._storeGroup.release();
+        }
+        if (typeof this.releaseDispacherEvent === "function") {
+            this.releaseDispacherEvent();
         }
     }
 }

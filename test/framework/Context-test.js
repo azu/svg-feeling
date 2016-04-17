@@ -65,7 +65,7 @@ describe("Context", function () {
             const expectedMergedObject = {
                 "1": 1
             };
-            var store = new TestStore({"1": 1});
+            const store = new TestStore({"1": 1});
             const appContext = new Context({
                 dispatcher,
                 store
