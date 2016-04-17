@@ -21,7 +21,6 @@ const appContext = new AppContext({
 // LOG
 const Perf = require('react-addons-perf');
 window.Perf = Perf;
-
 if (process.env.NODE_ENV === `development`) {
     const logMap = {};
     dispatcher.onWillExecuteEachUseCase(useCase => {

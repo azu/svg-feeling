@@ -47,9 +47,10 @@ export default class Dispatcher extends CoreEventEmitter {
     /**
      * dispatch the method when {@link useCase} will do.
      * @param {UseCase} useCase
+     * @param {*} args
      */
-    dispatchWillExecuteUseCase(useCase) {
-        this.emit(ON_WILL_EXECUTE_EACH_USECASE, useCase);
+    dispatchWillExecuteUseCase(useCase, args) {
+        this.emit(ON_WILL_EXECUTE_EACH_USECASE, useCase, args);
 
     }
 

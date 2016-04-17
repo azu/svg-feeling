@@ -1,7 +1,7 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import Dispatcher, {ON_WILL_EXECUTE_EACH_USECASE, ON_DID_EXECUTE_EACH_USECASE} from "./Dispatcher";
+import Dispatcher from "./Dispatcher";
 import UseCase from "./UseCase";
 export default class UseCaseExecutor {
     /**
@@ -45,7 +45,7 @@ export default class UseCaseExecutor {
     }
 
     /**
-     * @param {*} result
+     *
      */
     didExecute(result) {
         // emit event for Store
