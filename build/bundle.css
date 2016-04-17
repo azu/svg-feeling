@@ -1,0 +1,276 @@
+@charset "UTF-8";
+/* Base */
+* {
+    box-sizing: border-box;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+#js-app {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+/* variable */
+/* Component */
+.App {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+}
+.IconPalette {
+    font-size: 3rem;
+}
+/*
+    Grid > GridCell
+
+    HeightについてはGrid側としては考慮していなくて、Columnに関するCellをセルを定義してる。
+    横並びの実装がメインのタスク
+    小さなリファレンス実装のため、厳密なものとしては書かれてない
+
+    table-cellのようなもの
+
+    Gridで考えるかどうかも別で検討が必要そう。
+    borderやgutterなどの概念もレイアウトするには必要になるはず
+    http://gridbyexample.com/
+    http://mdo.github.io/table-grid/
+
+    素直によく作りこまれたライブラリを使うのもありだと思う。
+    CSSでGridLayoutの仕様があるのでそっちに乗っかるのもありそう
+    display:table-cell;を安易に使うべきでない理由いろいろ - Qiita
+    http://qiita.com/sawadays0118/items/4c329fd05cdff14ffebc
+
+    小さなうちは普通に動きそうだけど、柔軟性に欠けるというのはありそう
+*/
+/* Debug */
+.Grid .GridCell {
+    border: #d0d0d0 solid 1px;
+}
+.Grid--gutter {
+
+}
+.Grid {
+    box-sizing: border-box;
+    width: 100%;
+}
+/*Clear*/
+.Grid:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.Grid--center {
+
+}
+.Grid--middle .GridCell {
+    vertical-align: middle;
+}
+.GridCell {
+    min-width: 1px;
+    box-sizing: border-box;
+    display: inline;
+}
+.GridCell[class*='col-'] {
+    float: left;
+}
+.GridCell[class*='col-']:last-of-type {
+    padding-right: 0;
+}
+.GridCell.col-1of12 {
+    width: 8.33333%
+}
+.GridCell.col-2of12 {
+    width: 16.66667%
+}
+.GridCell.col-3of12 {
+    width: 25%
+}
+.GridCell.col-4of12 {
+    width: 33.33333%
+}
+.GridCell.col-5of12 {
+    width: 41.66667%
+}
+.GridCell.col-6of12 {
+    width: 50%
+}
+.GridCell.col-7of12 {
+    width: 58.33333%
+}
+.GridCell.col-8of12 {
+    width: 66.66667%
+}
+.GridCell.col-9of12 {
+    width: 75%
+}
+.GridCell.col-10of12 {
+    width: 83.33333%
+}
+.GridCell.col-11of12 {
+    width: 91.66667%
+}
+.GridCell.col-full, .GridCell.col-12of12 {
+    width: 100%
+}
+.Image {
+    max-width: 100%;
+    max-height: 100%;
+}
+.SVGIcon {
+    width: 1em;
+    height: 1em;
+}
+/* Library */
+.pdf-textLayer, .pdf-slide-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0; }
+/* CSS classes used by TextLayerBuilder to style the text layer divs */
+/* This stuff is important! Otherwise when you select the text,
+   the text in the divs will show up! */
+::selection {
+  background: rgba(0, 0, 255, 0.3); }
+::-moz-selection {
+  background: rgba(0, 0, 255, 0.3); }
+.pdf-textLayer {
+  color: #000;
+  font-family: sans-serif;
+  overflow: hidden; }
+.pdf-textLayer > div {
+  color: transparent;
+  position: absolute;
+  line-height: 1;
+  white-space: pre;
+  cursor: text;
+  /* Allow absolute positioning of the canvas and textLayer in the page. They
+     will be the same size and will be placed on top of each other. */
+  /* CSS classes used by TextLayerBuilder to style the text layer divs */
+  /* This stuff is important! Otherwise when you select the text,
+     the text in the divs will show up! */
+  /* */
+  /* your style */ }
+.pdf-textLayer > div body {
+    font-family: arial, verdana, sans-serif; }
+.pdf-textLayer > div .pdfPage {
+    position: relative;
+    overflow: visible;
+    border: 1px solid #000000; }
+.pdf-textLayer > div .pdf-page {
+    position: relative; }
+.pdf-textLayer > div .pdfPage > canvas {
+    position: absolute;
+    top: 0;
+    left: 0; }
+.pdf-textLayer > div ::selection {
+    background: rgba(0, 0, 255, 0.3); }
+.pdf-textLayer > div ::-moz-selection {
+    background: rgba(0, 0, 255, 0.3); }
+.pdf-textLayer > div .pdf-textLayer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    color: #000;
+    font-family: sans-serif;
+    overflow: hidden; }
+.pdf-textLayer > div .pdf-textLayer > div {
+    color: transparent;
+    position: absolute;
+    line-height: 1;
+    white-space: pre;
+    cursor: text; }
+.pdf-textLayer > div .pdf-annotationLayer a {
+    display: block;
+    position: absolute;
+    height: 100%;
+    width: 100%; }
+.pdf-textLayer > div .pdf-annotationLayer a:hover {
+    opacity: 0.2;
+    background: #ff0;
+    box-shadow: 0 2px 10px #ff0; }
+.pdf-textLayer > div .pdf-canvas {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    -webkit-transition: width 0.3s ease-in;
+    transition: width 0.3s ease-in; }
+.pdf-textLayer > div .pdf-slide-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px; }
+.pdf-textLayer > div .pdf-slide-progress-bar {
+    width: 0;
+    height: 3px;
+    background-color: #44a4dd;
+    -webkit-transition: width 0.05s ease-out;
+    transition: width 0.05s ease-out; }
+.pdf-annotationLayer a {
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%; }
+.pdf-annotationLayer a:hover {
+  opacity: 0.2;
+  background: #ff0;
+  box-shadow: 0 2px 10px #ff0; }
+.pdf-canvas {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  -webkit-transition: width 0.3s ease-in;
+  transition: width 0.3s ease-in; }
+/* progress bar */
+.pdf-slide-progress {
+  height: 3px; }
+.pdf-slide-progress-bar {
+  width: 0;
+  height: 8px;
+  background-color: #44a4dd;
+  -webkit-transition: width 0.05s linear;
+  transition: width 0.05s linear; }
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+.pdf-loading-hidden {
+  display: none; }
+.pdf-loading {
+  margin-top: -1rem;
+  margin-left: -1rem;
+  border: 1px solid #797673;
+  border-radius: 51%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4rem;
+  height: 4rem;
+  -webkit-animation: 1s linear infinite spin;
+  animation: 1s linear infinite spin; }
+.pdf-loading::before {
+  display: block;
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  content: "";
+  background-color: #fff; }
+/*# sourceMappingURL=bundle.css.map */
