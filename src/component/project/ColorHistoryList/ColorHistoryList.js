@@ -12,7 +12,7 @@ export default class ColorHistoryList extends React.Component {
         /**
          * @type {ColorHistory}
          */
-        const history = this.props.colorHistory;
+        const history = this.props.ColorHistoryStore.colorHistory;
         const items = history.getAllColorList().map((color, index) => {
             return <ColorHistoryListItem key={index} color={color}/>
         });
@@ -23,5 +23,4 @@ export default class ColorHistoryList extends React.Component {
 }
 
 ColorHistoryList.propTypes = {
-    colorHistory: React.PropTypes.instanceOf(ColorHistory).isRequired
 };
