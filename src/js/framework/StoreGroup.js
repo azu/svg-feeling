@@ -44,6 +44,7 @@ export default class StoreGroup extends CoreEventEmitter {
          * @private
          */
         this._currentChangingStores = [];
+        this._previousChangingStores = [];
         /**
          * @type {Store[]}
          */
@@ -52,33 +53,41 @@ export default class StoreGroup extends CoreEventEmitter {
         this.stores.forEach(store => this.registerStore(store));
 
         /**
-         * @type {WeakMap}
+         * @type {Map}
          * @private
          */
-        this._storeValueMap = new WeakMap();
+        this._storeValueMap = new Map();
     }
 
     getState() {
-        return Object.assign({}, ...this.stores.map(store => {
+        const stateMap = this.stores.map(store => {
             /* Why record nextState to `_storeValueMap`.
-            It is for Use Store's getState(prevState) implementation.
-            
-            @example
-            
-            class ExampleStore extends Store {
-                getState(prevState = initialState) {
-                    return {
+             It is for Use Store's getState(prevState) implementation.
+
+             @example
+
+             class ExampleStore extends Store {
+                 getState(prevState = initialState) {
+                     return {
                         nextState
-                    };
-                }
-            }
+                     };
+                 }
+             }
              */
-            const prevState = this._storeValueMap.get(store);
+            const prevState = this._storeValueMap.get(store.name);
+            if (prevState && this._previousChangingStores.indexOf(store) === -1) {
+                return {
+                    [store.name]: prevState
+                };
+            }
             const nextState = store.getState(prevState);
-            this._storeValueMap.set(store, nextState);
+            this._storeValueMap.set(store.name, nextState);
             assert(typeof nextState == "object", `${store.name}.getState() should return Object`);
-            return nextState;
-        }));
+            return {
+                [store.name]: nextState
+            };
+        });
+        return Object.assign({}, ...stateMap);
     }
 
     /**
@@ -122,8 +131,9 @@ export default class StoreGroup extends CoreEventEmitter {
     }
 
     emitChange() {
+        this._previousChangingStores = this._currentChangingStores.slice();
         // transfer ownership of changingStores to other
-        this.emit(CHANGE_STORE_GROUP, this._currentChangingStores.slice());
+        this.emit(CHANGE_STORE_GROUP, this._previousChangingStores);
         // release ownership  of changingStores from StoreGroup
         this._currentChangingStores.length = 0;
     }

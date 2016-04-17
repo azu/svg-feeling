@@ -19,6 +19,8 @@ const appContext = new AppContext({
     stores: readAggregate.stores
 });
 // LOG
+const Perf = require('react-addons-perf');
+window.Perf = Perf;
 const logMap = {};
 dispatcher.onWillExecuteEachUseCase(useCase => {
     const startTimeStamp = performance.now();
@@ -29,8 +31,8 @@ dispatcher.onWillExecuteEachUseCase(useCase => {
 dispatcher.onDispatch(payload => {
     ContextLogger.logDispatch(payload);
 });
-appContext.onChange(() => {
-    ContextLogger.logOnChange(appContext.stores);
+appContext.onChange((stores) => {
+    ContextLogger.logOnChange(stores);
 });
 dispatcher.onDidExecuteEachUseCase(useCase => {
     const startTimeStamp = logMap[useCase.name];

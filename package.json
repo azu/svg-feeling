@@ -69,6 +69,8 @@
     "pdf.js-controller": "^1.0.1",
     "randomcolor": "^0.4.4",
     "react": "^15.0.1",
+    "react-addons-perf": "^15.0.1",
+    "react-addons-shallow-compare": "^15.0.1",
     "react-dom": "^15.0.1",
     "suitcss-base": "^2.0.0",
     "suitcss-classnames": "^1.1.0",

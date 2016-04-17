@@ -24,14 +24,15 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {currentColor, colorHistory, wallColor} = this.state;
+        const {ColorStore, ColorHistoryStore, WallColorStore} = this.state;
+        const {wallColor} = WallColorStore;
         const style = {
             backgroundColor: wallColor.rgba
         };
         return <div className="App" style={style}>
             <MousePositionContainer />
-            <PlaygroundContainer color={currentColor}/>
-            <HistoryContainer colorHistory={colorHistory}/>
+            <PlaygroundContainer ColorStore={ColorStore}/>
+            <HistoryContainer ColorHistoryStore={ColorHistoryStore}/>
         </div>;
     }
 }

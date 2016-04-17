@@ -5,6 +5,9 @@ import ColorHistory from "../domain/ColorHistory";
 const initialState = {
     colorHistory: new ColorHistory()
 };
+/**
+ * Simple Store pattern
+ */
 export default class ColorHistoryStore extends Store {
     /**
      * @param {ColorMixerRepository} colorMixerRepository
