@@ -1,12 +1,19 @@
 # svg-feeling
 
-- mix color and fill svg
-- already use color and not re-use (saved domain as presitend)
+Open: http://azu.github.io/svg-feeling/
 
-## Domain
+## Demo project of JavaScript Architecture 
+
+See document of https://github.com/azu/presentation-annotator
+
+### Domain
 
 - ColorMixer
 - ColorHistory
+
+### State
+
+- WallColor
 
 ## Contributing
 
