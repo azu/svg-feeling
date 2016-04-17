@@ -5,18 +5,18 @@ import ReactDOM from "react-dom";
 import App from "./component/container/App";
 import AppContextLocator from "./AppContextLocator";
 // store
-import ReadAggregate from "./js/store/ReadAggregate";
+import AppStoreGroup from "./js/store/AppStoreGroup";
 // context
 import AppContext  from "./js/framework/Context";
 import Dispatcher from "./js/framework/Dispatcher";
 import ContextLogger from "./js/util/ContextLogger";
 // instances
-const readAggregate = new ReadAggregate();
 const dispatcher = new Dispatcher();
+const appStoreGroup = new AppStoreGroup(dispatcher);
 // context connect dispatch with stores
 const appContext = new AppContext({
     dispatcher,
-    stores: readAggregate.stores
+    store: appStoreGroup
 });
 // LOG
 const Perf = require('react-addons-perf');

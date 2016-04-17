@@ -1,9 +1,9 @@
 // LICENSE : MIT
 "use strict";
 const assert = require("assert");
-import CoreEventEmitter from "./CoreEventEmitter";
+import CoreEventEmitter from "./../CoreEventEmitter";
 const CHANGE_STORE_GROUP = "CHANGE_STORE_GROUP";
-import Store from "./Store";
+import Store from "./../Store";
 export function validateStore(store) {
     assert(store instanceof Store, "store should be instance of Store");
     assert(typeof store.getState === "function", "Store#getState() should be implemented.\n" +
@@ -22,7 +22,7 @@ export default class StoreGroup extends CoreEventEmitter {
      * @param {Store[]} stores stores are instance of MaterialStore
      * @param {Dispatcher} dispatcher dispatcher is the central dispatcher
      */
-    constructor(stores, dispatcher) {
+    constructor({stores, dispatcher}) {
         super();
         stores.forEach(validateStore);
         this._onChangeQueue = Promise.resolve();

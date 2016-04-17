@@ -2,29 +2,29 @@
 "use strict";
 const assert = require("assert");
 import CoreEventEmitter from "./CoreEventEmitter";
-import StoreGroup from "./StoreGroup";
+import StoreGroup from "./UILayer/StoreGroup";
 import UseCase from "./UseCase";
 import UseCaseExecutor  from "./UseCaseExecutor";
+import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 const CONTEXT_ON_CHANGE = "CONTEXT_ON_CHANGE";
 export default class Context extends CoreEventEmitter {
     /**
      * @param {Dispatcher} dispatcher
-     * @param {Store[]} stores
+     * @param {StoreGroup|Store} store
      */
-    constructor({dispatcher, stores}) {
+    constructor({dispatcher, store}) {
         super();
+        StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
-        /**
-         * @type {Store[]}
-         */
-        this.stores = stores;
-        this.storeGroup = new StoreGroup(this.stores, this._dispatcher);
-        // Note: StoreGroup thin out change events of stores.
-        // When Multiple stores are change at same time, call change handler at once.
-        this.storeGroup.onChange(changingStores => {
-            this.emit(CONTEXT_ON_CHANGE, changingStores);
-        });
+        this._storeGroup = store;
+
+        // delegate dispatcher event.
+        // It it for Store.
+        // Dispatcher -> Store
+        // StoreGroup already delete event to store*s* when it was initialized.
+        // Dispatcher -> | StoreGroup | -> Store*s*
+        this.releaseDispacherEvent = this._dispatcher.pipe(this._storeGroup);
     }
 
     /**
@@ -32,15 +32,16 @@ export default class Context extends CoreEventEmitter {
      * @returns {*} states object of stores
      */
     getState() {
-        return this.storeGroup.getState();
+        return this._storeGroup.getState();
     }
 
     /**
      * if anyone store is changed, then call onChangeHandler
      * @param {function(changingStores: Store[])} onChangeHandler
+     * @return {Function} release handler function.
      */
     onChange(onChangeHandler) {
-        this.on(CONTEXT_ON_CHANGE, onChangeHandler);
+        return this._storeGroup.onChange(onChangeHandler);
     }
 
     /**
@@ -60,6 +61,11 @@ export default class Context extends CoreEventEmitter {
      * You can call this when no more call event handler
      */
     release() {
-        this.storeGroup.release();
+        if (typeof this._storeGroup === "function") {
+            this._storeGroup.release();
+        }
+        if (typeof this.releaseDispacherEvent === "function") {
+            this.releaseDispacherEvent();
+        }
     }
 }
