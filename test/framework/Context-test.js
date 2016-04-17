@@ -6,7 +6,7 @@ import Dispatcher from "../../src/js/framework/Dispatcher";
 import Store from "../../src/js/framework/Store";
 import UseCase from "../../src/js/framework/UseCase";
 import UseCaseExecutor from "../../src/js/framework/UseCaseExecutor";
-
+import StoreGroup from "../../src/js/framework/UILayer/StoreGroup";
 class TestStore extends Store {
     constructor(echo) {
         super();
@@ -51,10 +51,10 @@ describe("Context", function () {
                 }
             }
             // when
-            const stores = [new ReceiveStore()];
+            const store = new ReceiveStore();
             const appContext = new Context({
                 dispatcher,
-                stores: stores
+                store
             });
             appContext.useCase(new DispatchUseCase()).execute();
         });
@@ -65,24 +65,26 @@ describe("Context", function () {
             const expectedMergedObject = {
                 "1": 1
             };
-            const stores = [new TestStore({"1": 1})];
+            var store = new TestStore({"1": 1});
             const appContext = new Context({
                 dispatcher,
-                stores: stores
+                store
             });
             const states = appContext.getState();
-            assert.deepEqual(states, {
-                TestStore: expectedMergedObject
-            });
+            assert.deepEqual(states, expectedMergedObject);
         });
     });
     describe("#onChange", function () {
         it("should called when change some State", function (done) {
             const dispatcher = new Dispatcher();
             const testStore = new TestStore({"1": 1});
+            const storeGroup = new StoreGroup({
+                stores: [testStore],
+                dispatcher
+            });
             const appContext = new Context({
                 dispatcher,
-                stores: [testStore]
+                store: storeGroup
             });
             appContext.onChange((stores) => {
                 assert.equal(stores.length, 1);
@@ -95,9 +97,13 @@ describe("Context", function () {
             const dispatcher = new Dispatcher();
             const aStore = new TestStore({"1": 1});
             const bStore = new TestStore({"1": 1});
-            const appContext = new Context({
+            const storeGroup = new StoreGroup({
                 dispatcher,
                 stores: [aStore, bStore]
+            });
+            const appContext = new Context({
+                dispatcher,
+                store: storeGroup
             });
             appContext.onChange((stores) => {
                 assert(stores.length, 2);
@@ -113,7 +119,7 @@ describe("Context", function () {
             const dispatcher = new Dispatcher();
             const appContext = new Context({
                 dispatcher,
-                stores: []
+                store: new TestStore({"1": 1})
             });
             const useCaseExecutor = appContext.useCase(new ThrowUseCase());
             assert(useCaseExecutor instanceof UseCaseExecutor);

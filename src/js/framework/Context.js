@@ -2,27 +2,28 @@
 "use strict";
 const assert = require("assert");
 import CoreEventEmitter from "./CoreEventEmitter";
-import StoreGroup from "./StoreGroup";
+import StoreGroup from "./UILayer/StoreGroup";
 import UseCase from "./UseCase";
 import UseCaseExecutor  from "./UseCaseExecutor";
+import StoreGroupValidator from "./UILayer/StoreGroupValidator";
 const CONTEXT_ON_CHANGE = "CONTEXT_ON_CHANGE";
 export default class Context extends CoreEventEmitter {
     /**
      * @param {Dispatcher} dispatcher
-     * @param {Store[]} stores
+     * @param {StoreGroup|Object} store
      */
-    constructor({dispatcher, stores}) {
+    constructor({dispatcher, store}) {
         super();
+        StoreGroupValidator.validateInstance(store);
         // central dispatcher
         this._dispatcher = dispatcher;
-        /**
-         * @type {Store[]}
-         */
-        this.stores = stores;
-        this.storeGroup = new StoreGroup(this.stores, this._dispatcher);
+        this._storeGroup = store;
+        
+        // delegate dispatcher event 
+        this._dispatcher.pipe(this._storeGroup);
         // Note: StoreGroup thin out change events of stores.
         // When Multiple stores are change at same time, call change handler at once.
-        this.storeGroup.onChange(changingStores => {
+        this._storeGroup.onChange(changingStores => {
             this.emit(CONTEXT_ON_CHANGE, changingStores);
         });
     }
@@ -32,7 +33,7 @@ export default class Context extends CoreEventEmitter {
      * @returns {*} states object of stores
      */
     getState() {
-        return this.storeGroup.getState();
+        return this._storeGroup.getState();
     }
 
     /**
@@ -60,6 +61,8 @@ export default class Context extends CoreEventEmitter {
      * You can call this when no more call event handler
      */
     release() {
-        this.storeGroup.release();
+        if (typeof this._storeGroup === "function") {
+            this._storeGroup.release();
+        }
     }
 }
