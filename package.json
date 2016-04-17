@@ -31,7 +31,7 @@
     "watch": "npm-run-all clean --parallel watch:*",
     "prepublish": "npm run --if-present build",
     "test": "mocha",
-    "deploy": "gh-pages -d public"
+    "deploy": "npm run build && gh-pages -d public"
   },
   "keywords": [
     "svg"
